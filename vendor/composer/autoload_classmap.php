@@ -42,6 +42,7 @@ return array(
     'App\\Http\\Requests\\ProductRequest' => $baseDir . '/app/Http/Requests/ProductRequest.php',
     'App\\Http\\Requests\\TransactionRequest' => $baseDir . '/app/Http/Requests/TransactionRequest.php',
     'App\\Http\\Requests\\UserRequest' => $baseDir . '/app/Http/Requests/UserRequest.php',
+    'App\\Models\\Oracle' => $baseDir . '/app/Models/Oracle.php',
     'App\\Models\\Product' => $baseDir . '/app/Models/Product.php',
     'App\\Models\\ProductCategory' => $baseDir . '/app/Models/ProductCategory.php',
     'App\\Models\\ProductGallery' => $baseDir . '/app/Models/ProductGallery.php',
