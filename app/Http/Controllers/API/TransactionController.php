@@ -11,66 +11,71 @@ use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
 {
-    // TODO: semua request
-    public function all(Request $request) {
-        $id = $request->input("id");
-        $limit = $request->input("limit", 6);
-        $status = $request->input("status");
+    public function all(Request $request)
+    {
+        $id = $request->input('id');
+        $limit = $request->input('limit', 6);
+        $status = $request->input('status');
 
-        if ($id) {
-            $transaction = Transaction::with(["items.product"])->find($id);
+        if($id)
+        {
+            $transaction = Transaction::with(['items.product'])->find($id);
 
-            if ($transaction) {
+            if($transaction)
                 return ResponseFormatter::success(
                     $transaction,
-                    "Data transaksi berhasil diambil"
+                    'Data transaksi berhasil diambil'
                 );
-            } else {
+            else
                 return ResponseFormatter::error(
                     null,
-                    "data transaksi tidak ada", 
-                    404);
-            }
+                    'Data transaksi tidak ada',
+                    404
+                );
         }
 
-        $transaction = Transaction::with(["items.product"])->where("users_id", Auth::user()->id);
+        $transaction = Transaction::with(['items.product'])->where('users_id', Auth::user()->id);
 
-        if ($status) {
-            $transaction->where("status", $status);
-        }
+        if($status)
+            $transaction->where('status', $status);
 
-        return ResponseFormatter::success([
-            $transaction->paginate($limit),          
-        ], "Data list transaksi berhasil diambil");
+        return ResponseFormatter::success(
+            $transaction->paginate($limit),
+            'Data list transaksi berhasil diambil'
+        );
     }
 
-    // TODO: checkout
-    public function checkout(Request $request) {
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function checkout(Request $request)
+    {
         $request->validate([
-            "items" => "required|array",
-            "items.*.id"  =>  "exists:products,id", // jika ada 3 item akan dicek semua
-            "total_price" => "required",
-            "shiping_price" => "nullable",
-            "status" => "required|in:PENDING,SUCCESS,CANCELLED,FAILED,SHIPING,SHIPPED",
+            'items' => 'required|array',
+            'items.*.id' => 'exists:products,id',
+            'total_price' => 'required',
+            'shipping_price' => 'required',
+            'status' => 'required|in:PENDING,SUCCESS,CANCELLED,FAILED,SHIPPING,SHIPPED',
         ]);
 
         $transaction = Transaction::create([
-            "users_id" => Auth::user()->id,
-            "address" => $request->address,
-            "total_price" => $request->total_price,
-            "shipping_price" => $request->shipping_price,
-            "status" => $request->status,
+            'users_id' => Auth::user()->id,
+            'address' => $request->address,
+            'total_price' => $request->total_price,
+            'shipping_price' => $request->shipping_price,
+            'status' => $request->status
         ]);
-
-        foreach($request->items as $product) {
+        
+        foreach ($request->items as $product) {
             TransactionItem::create([
-                "users_id" => Auth::user()->id,
-                "products_id" => $product["id"],
-                "transactions_id" => $transaction->id,
-                "quantity" => $product["quantity"]
+                'users_id' => Auth::user()->id,
+                'products_id' => $product['id'],
+                'transactions_id' => $transaction->id,
+                'quantity' => $product['quantity']
             ]);
         }
 
-        return ResponseFormatter::success($transaction->load("items.product"), "Transaksi Berhasil");
+        return ResponseFormatter::success($transaction->load('items.product'), 'Transaksi berhasil');
     }
 }

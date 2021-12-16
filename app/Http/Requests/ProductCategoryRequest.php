@@ -25,7 +25,6 @@ class ProductCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            //
             'name' => 'required|max:255'
         ];
     }

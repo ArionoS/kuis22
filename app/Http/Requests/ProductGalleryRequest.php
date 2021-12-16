@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Http\FormRequest;
 
 class ProductGalleryRequest extends FormRequest
 {
@@ -25,7 +25,6 @@ class ProductGalleryRequest extends FormRequest
     public function rules()
     {
         return [
-            //
             'files.*' => 'required|image',
         ];
     }

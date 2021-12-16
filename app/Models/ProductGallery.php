@@ -2,27 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ProductGallery extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        "products_id",
-        "url",
+        'products_id', 'url', 'is_featured'
     ];
 
-    // TODO: relasi ke product
-    public function gallery() {
-        return $this->belongsTo(Product::class, "products_id", "id");
-    }
-
-    // TODO: convert ke full url
-    public function getUrlAttributes($url) {
-        return config("app.url") . Storage::url($url);
+    
+    public function getUrlAttribute($url)
+    {
+        return config('app.url') . Storage::url($url);
     }
 }
